@@ -18,7 +18,7 @@
  */
 /* eslint-disable react/sort-prop-types */
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import React from 'react';
 import { Histogram, BarSeries, XAxis, YAxis } from '@data-ui/histogram';
 import { chartTheme } from '@data-ui/theme';
 import { LegendOrdinal } from '@vx/legend';
@@ -56,7 +56,7 @@ const defaultProps = {
   yAxisLabel: '',
 };
 
-class CustomHistogram extends PureComponent {
+class CustomHistogram extends React.PureComponent {
   render() {
     const {
       className,

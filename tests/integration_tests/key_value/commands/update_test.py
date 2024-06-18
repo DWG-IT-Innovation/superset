@@ -16,19 +16,19 @@
 # under the License.
 from __future__ import annotations
 
+import json
 from typing import TYPE_CHECKING
 
 from flask.ctx import AppContext
 from flask_appbuilder.security.sqla.models import User
 
 from superset.extensions import db
-from superset.utils import json
 from superset.utils.core import override_user
 from tests.integration_tests.key_value.commands.fixtures import (
-    admin,  # noqa: F401
+    admin,
     ID_KEY,
     JSON_CODEC,
-    key_value_entry,  # noqa: F401
+    key_value_entry,
     RESOURCE,
     UUID_KEY,
 )
@@ -42,8 +42,8 @@ NEW_VALUE = "new value"
 
 def test_update_id_entry(
     app_context: AppContext,
-    admin: User,  # noqa: F811
-    key_value_entry: KeyValueEntry,  # noqa: F811
+    admin: User,
+    key_value_entry: KeyValueEntry,
 ) -> None:
     from superset.commands.key_value.update import UpdateKeyValueCommand
     from superset.key_value.models import KeyValueEntry
@@ -64,8 +64,8 @@ def test_update_id_entry(
 
 def test_update_uuid_entry(
     app_context: AppContext,
-    admin: User,  # noqa: F811
-    key_value_entry: KeyValueEntry,  # noqa: F811
+    admin: User,
+    key_value_entry: KeyValueEntry,
 ) -> None:
     from superset.commands.key_value.update import UpdateKeyValueCommand
     from superset.key_value.models import KeyValueEntry
@@ -84,7 +84,7 @@ def test_update_uuid_entry(
     assert entry.changed_by_fk == admin.id
 
 
-def test_update_missing_entry(app_context: AppContext, admin: User) -> None:  # noqa: F811
+def test_update_missing_entry(app_context: AppContext, admin: User) -> None:
     from superset.commands.key_value.update import UpdateKeyValueCommand
 
     with override_user(admin):

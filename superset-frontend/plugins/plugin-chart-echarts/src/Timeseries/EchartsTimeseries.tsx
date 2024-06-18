@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   DTTM_ALIAS,
   BinaryQueryObjectFilterClause,
@@ -25,7 +25,6 @@ import {
   getColumnLabel,
   getNumberFormatter,
   LegendState,
-  ensureIsArray,
 } from '@superset-ui/core';
 import { ViewRootGroup } from 'echarts/types/src/util/types';
 import GlobalModel from 'echarts/types/src/model/Global';
@@ -174,7 +173,6 @@ export default function EchartsTimeseries({
           ...(eventParams.name ? [eventParams.name] : []),
           ...(labelMap[seriesName] ?? []),
         ];
-        const groupBy = ensureIsArray(formData.groupby);
         if (data && xAxis.type === AxisType.Time) {
           drillToDetailFilters.push({
             col:
@@ -190,7 +188,7 @@ export default function EchartsTimeseries({
         }
         [
           ...(xAxis.type === AxisType.Category && data ? [xAxis.label] : []),
-          ...groupBy,
+          ...formData.groupby,
         ].forEach((dimension, i) =>
           drillToDetailFilters.push({
             col: dimension,
@@ -199,7 +197,7 @@ export default function EchartsTimeseries({
             formattedVal: String(values[i]),
           }),
         );
-        groupBy.forEach((dimension, i) => {
+        formData.groupby.forEach((dimension, i) => {
           const val = labelMap[seriesName][i];
           drillByFilters.push({
             col: dimension,

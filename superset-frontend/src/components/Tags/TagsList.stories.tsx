@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react';
 import TagType from 'src/types/TagType';
 import { TagsList } from '.';
 import { TagsListProps } from './TagsList';

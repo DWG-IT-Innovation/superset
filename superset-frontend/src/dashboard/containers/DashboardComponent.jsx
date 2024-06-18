@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -116,7 +116,7 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-class DashboardComponent extends PureComponent {
+class DashboardComponent extends React.PureComponent {
   render() {
     const { component } = this.props;
     const Component = component ? componentLookup[component.type] : null;

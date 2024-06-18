@@ -57,6 +57,10 @@ describe('logging', () => {
     Object.assign(window, { console: undefined });
     const { logging } = require('@superset-ui/core');
 
+    afterAll(() => {
+      Object.assign(window, { console });
+    });
+
     expect(() => {
       logging.debug();
       logging.log();
@@ -69,6 +73,5 @@ describe('logging', () => {
         [3, 4],
       ]);
     }).not.toThrow();
-    Object.assign(window, { console });
   });
 });

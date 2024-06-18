@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { ReactElement } from 'react';
+import React from 'react';
 import { DatasourceType } from '@superset-ui/core';
 import { exploreActions } from 'src/explore/actions/exploreActions';
 import { ChartStatus } from 'src/explore/types';
@@ -101,7 +101,7 @@ export const createResultsPaneOnDashboardProps = ({
 }: {
   sliceId: number;
   vizType?: string;
-  errorMessage?: ReactElement;
+  errorMessage?: React.ReactElement;
   queryForce?: boolean;
   isRequest?: boolean;
 }) =>

@@ -17,6 +17,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react';
 import {
   ChartDataResponseResult,
   ensureIsArray,
@@ -25,7 +26,7 @@ import {
   isPhysicalColumn,
   QueryFormColumn,
   QueryMode,
-  SMART_DATE_ID,
+  smartDateFormatter,
   t,
 } from '@superset-ui/core';
 import {
@@ -361,7 +362,7 @@ const config: ControlPanelConfig = {
               type: 'SelectControl',
               freeForm: true,
               label: t('Timestamp format'),
-              default: SMART_DATE_ID,
+              default: smartDateFormatter.id,
               renderTrigger: true,
               clearable: false,
               choices: D3_TIME_FORMAT_OPTIONS,
@@ -447,18 +448,6 @@ const config: ControlPanelConfig = {
               description: t(
                 "Allow end user to drag-and-drop column headers to rearrange them. Note their changes won't persist for the next time they open the chart.",
               ),
-            },
-          },
-        ],
-        [
-          {
-            name: 'allow_render_html',
-            config: {
-              type: 'CheckboxControl',
-              label: t('Render columns in HTML format'),
-              renderTrigger: true,
-              default: true,
-              description: t('Render data in HTML format if applicable.'),
             },
           },
         ],

@@ -28,7 +28,7 @@ import {
   getTimeFormatterForGranularity,
   NumberFormats,
   QueryMode,
-  SMART_DATE_ID,
+  smartDateFormatter,
   TimeFormats,
   TimeFormatter,
 } from '@superset-ui/core';
@@ -140,7 +140,7 @@ const processColumns = memoizeOne(function processColumns(
         const customFormat = config.d3TimeFormat || savedFormat;
         const timeFormat = customFormat || tableTimestampFormat;
         // When format is "Adaptive Formatting" (smart_date)
-        if (timeFormat === SMART_DATE_ID) {
+        if (timeFormat === smartDateFormatter.id) {
           if (granularity) {
             // time column use formats based on granularity
             formatter = getTimeFormatterForGranularity(granularity);
@@ -238,7 +238,6 @@ const transformProps = (
     show_totals: showTotals,
     conditional_formatting: conditionalFormatting,
     allow_rearrange_columns: allowRearrangeColumns,
-    allow_render_html: allowRenderHtml,
   } = formData;
   const timeGrain = extractTimegrain(formData);
 
@@ -292,7 +291,6 @@ const transformProps = (
     columnColorFormatters,
     timeGrain,
     allowRearrangeColumns,
-    allowRenderHtml,
     onContextMenu,
   };
 };

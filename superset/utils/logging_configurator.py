@@ -65,4 +65,4 @@ class DefaultLoggingConfigurator(  # pylint: disable=too-few-public-methods
             )
             logging.getLogger().addHandler(handler)
 
-        logger.debug("logging was configured successfully")
+        logger.info("logging was configured successfully")

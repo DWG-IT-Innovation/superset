@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { PureComponent } from 'react';
+import React from 'react';
 import cloudLayout, { Word } from 'd3-cloud';
 import {
   PlainObject,
@@ -88,7 +88,10 @@ const MAX_SCALE_FACTOR = 3;
 // Needed to avoid clutter when shrinking a chart with many records.
 const TOP_RESULTS_PERCENTAGE = 0.1;
 
-class WordCloud extends PureComponent<FullWordCloudProps, WordCloudState> {
+class WordCloud extends React.PureComponent<
+  FullWordCloudProps,
+  WordCloudState
+> {
   static defaultProps = defaultProps;
 
   // Cannot name it isMounted because of conflict

@@ -14,8 +14,10 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from collections.abc import Iterator
 
 import pytest
+from sqlalchemy.orm.session import Session
 
 
 def test_user_favorite_tag(mocker):
@@ -77,7 +79,7 @@ def test_remove_user_favorite_tag_no_user(mocker):
     from superset.exceptions import MissingUserContextException
 
     # Mock the behavior of TagDAO and g
-    mocker.patch("superset.daos.tag.db.session")  # noqa: F841
+    mock_session = mocker.patch("superset.daos.tag.db.session")
     mock_TagDAO = mocker.patch("superset.daos.tag.TagDAO")
     mock_tag = mocker.MagicMock(users_favorited=[])
     mock_TagDAO.find_by_id.return_value = mock_tag
@@ -92,6 +94,7 @@ def test_remove_user_favorite_tag_no_user(mocker):
 
 def test_remove_user_favorite_tag_exc_raise(mocker):
     from superset.daos.tag import TagDAO
+    from superset.exceptions import MissingUserContextException
 
     # Mock the behavior of TagDAO and g
     mock_session = mocker.patch("superset.daos.tag.db.session")
@@ -99,9 +102,7 @@ def test_remove_user_favorite_tag_exc_raise(mocker):
     mock_tag = mocker.MagicMock(users_favorited=[])
     mock_TagDAO.find_by_id.return_value = mock_tag
 
-    mocker.patch(  # noqa: F841
-        "superset.daos.tag.g"
-    )  # Replace with the actual path to g  # noqa: F841
+    mock_g = mocker.patch("superset.daos.tag.g")  # Replace with the actual path to g
 
     # Test that exception is raised when commit fails
     mock_session.commit.side_effect = Exception("DB Error")
@@ -114,7 +115,7 @@ def test_user_favorite_tag_no_user(mocker):
     from superset.exceptions import MissingUserContextException
 
     # Mock the behavior of TagDAO and g
-    mocker.patch("superset.daos.tag.db.session")  # noqa: F841
+    mock_session = mocker.patch("superset.daos.tag.db.session")
     mock_TagDAO = mocker.patch("superset.daos.tag.TagDAO")
     mock_tag = mocker.MagicMock(users_favorited=[])
     mock_TagDAO.find_by_id.return_value = mock_tag
@@ -129,6 +130,7 @@ def test_user_favorite_tag_no_user(mocker):
 
 def test_user_favorite_tag_exc_raise(mocker):
     from superset.daos.tag import TagDAO
+    from superset.exceptions import MissingUserContextException
 
     # Mock the behavior of TagDAO and g
     mock_session = mocker.patch("superset.daos.tag.db.session")
@@ -136,9 +138,7 @@ def test_user_favorite_tag_exc_raise(mocker):
     mock_tag = mocker.MagicMock(users_favorited=[])
     mock_TagDAO.find_by_id.return_value = mock_tag
 
-    mocker.patch(  # noqa: F841
-        "superset.daos.tag.g"
-    )  # Replace with the actual path to g  # noqa: F841
+    mock_g = mocker.patch("superset.daos.tag.g")  # Replace with the actual path to g
 
     # Test that exception is raised when commit fails
     mock_session.commit.side_effect = Exception("DB Error")
@@ -150,6 +150,7 @@ def test_create_tag_relationship(mocker):
     from superset.daos.tag import TagDAO
     from superset.tags.models import (  # Assuming these are defined in the same module
         ObjectType,
+        TaggedObject,
     )
 
     mock_session = mocker.patch("superset.daos.tag.db.session")

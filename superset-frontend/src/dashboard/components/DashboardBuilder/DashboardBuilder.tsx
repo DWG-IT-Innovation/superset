@@ -18,7 +18,14 @@
  */
 /* eslint-env browser */
 import cx from 'classnames';
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   addAlpha,
   css,
@@ -405,7 +412,6 @@ const DashboardBuilder: FC<DashboardBuilderProps> = () => {
   const handleChangeTab = useCallback(
     ({ pathToTabIndex }: { pathToTabIndex: string[] }) => {
       dispatch(setDirectPathToChild(pathToTabIndex));
-      window.scrollTo(0, 0);
     },
     [dispatch],
   );
@@ -425,7 +431,7 @@ const DashboardBuilder: FC<DashboardBuilderProps> = () => {
     [dispatch],
   );
 
-  const headerRef = useRef<HTMLDivElement>(null);
+  const headerRef = React.useRef<HTMLDivElement>(null);
   const dashboardRoot = dashboardLayout[DASHBOARD_ROOT_ID];
   const rootChildId = dashboardRoot?.children[0];
   const topLevelTabs =

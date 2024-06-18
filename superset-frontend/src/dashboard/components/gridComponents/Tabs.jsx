@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { styled, t } from '@superset-ui/core';
 import { connect } from 'react-redux';
@@ -108,7 +108,7 @@ const StyledTabsContainer = styled.div`
   }
 `;
 
-export class Tabs extends PureComponent {
+export class Tabs extends React.PureComponent {
   constructor(props) {
     super(props);
     const { tabIndex, activeKey } = this.getTabInfo(props);

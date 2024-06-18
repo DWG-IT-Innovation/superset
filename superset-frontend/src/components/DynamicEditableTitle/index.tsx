@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import {
+import React, {
   ChangeEvent,
   KeyboardEvent,
   useCallback,

@@ -28,7 +28,7 @@ from superset.models.slice import Slice
 from superset.utils.core import get_user_id
 
 if TYPE_CHECKING:
-    pass
+    from superset.connectors.sqla.models import BaseDatasource
 
 logger = logging.getLogger(__name__)
 

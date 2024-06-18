@@ -17,12 +17,14 @@
 
 from __future__ import annotations
 
+import json
 from collections.abc import Generator
 from typing import TYPE_CHECKING
 from uuid import UUID
 
 import pytest
 from flask_appbuilder.security.sqla.models import User
+from sqlalchemy.orm import Session
 
 from superset.extensions import db
 from superset.key_value.types import (
@@ -30,7 +32,6 @@ from superset.key_value.types import (
     KeyValueResource,
     PickleKeyValueCodec,
 )
-from superset.utils import json
 from tests.integration_tests.test_app import app
 
 if TYPE_CHECKING:
@@ -64,6 +65,6 @@ def key_value_entry() -> Generator[KeyValueEntry, None, None]:
 
 @pytest.fixture
 def admin() -> User:
-    with app.app_context():  # noqa: F841
+    with app.app_context() as ctx:
         admin = db.session.query(User).filter_by(username="admin").one()
         return admin

@@ -22,40 +22,6 @@ under the License.
 This file documents any backwards-incompatible changes in Superset and
 assists people when migrating to a new version.
 
-## Next
-
-- [27505](https://github.com/apache/superset/pull/27505): We simplified the files under
-  `requirements/` folder. If you use these files for your builds you may want to double
-  check that your builds are not affected. `base.txt` should be the same as before, though
-  `development.txt` becomes a bigger set, incorporating the now defunct local,testing,integration, and docker
-- [27434](https://github.com/apache/superset/pull/27434/files): DO NOT USE our docker-compose.\*
-  files for production use cases! While we never really supported
-  or should have tried to support docker-compose for production use cases, we now actively
-  have taken a stance against supporting it. See the PR for details.
-- [24112](https://github.com/apache/superset/pull/24112): Python 3.10 is now the recommended python version to use, 3.9 still
-  supported but getting deprecated in the nearish future. CI/CD runs on py310 so you probably want to align. If you
-  use official dockers, upgrade should happen automatically.
-- [27697](https://github.com/apache/superset/pull/27697) [minor] flask-session bump leads to them
-  deprecating `SESSION_USE_SIGNER`, check your configs as this flag won't do anything moving
-  forward.
-- [27849](https://github.com/apache/superset/pull/27849/) More of an FYI, but we have a
-  new config `SLACK_ENABLE_AVATARS` (False by default) that works in conjunction with
-  set `SLACK_API_TOKEN` to fetch and serve Slack avatar links
-- [28134](https://github.com/apache/superset/pull/28134/) The default logging level was changed
-  from DEBUG to INFO - which is the normal/sane default logging level for most software.
-- [28205](https://github.com/apache/superset/pull/28205) The permission `all_database_access` now
-  more clearly provides access to all databases, as specified in its name. Before it only allowed
-  listing all databases in CRUD-view and dropdown and didn't provide access to data as it
-  seemed the name would imply.
-- [28483](https://github.com/apache/superset/pull/28483) Starting with this version we bundle
-  translations inside the python package. This includes the .mo files needed by pybabel on the
-  backend, as well as the .json files used by the frontend. If you were doing anything before
-  as part of your bundling to expose translation packages, it's probably not needed anymore.
-
-### Potential Downtime
-
-- [27392](https://github.com/apache/superset/pull/27392): Adds an index to `query.sql_editor_id` to improve performance. This may cause downtime on large deployments.
-
 ## 4.0.0
 
 - [27119](https://github.com/apache/superset/pull/27119): Updates various database columns to use the `MediumText` type, potentially requiring a table lock on MySQL dbs or taking some time to complete on large deployments.
@@ -88,7 +54,6 @@ assists people when migrating to a new version.
 ### Potential Downtime
 
 - [26416](https://github.com/apache/superset/pull/26416): Adds two database indexes to the `report_execution_log` table and one database index to the `report_recipient` to improve performance. Scheduled downtime may be required for large deployments.
-- [28482](https://github.com/apache/superset/pull/28482): Potentially augments the `query.executed_sql` and `query.select_sql` columns for MySQL from `MEDIUMTEXT` to `LONGTEXT`. Potential downtime may be required for large deployments which previously ran [27119](https://github.com/apache/superset/pull/27119).
 
 ## 3.1.0
 

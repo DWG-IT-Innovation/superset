@@ -17,6 +17,7 @@
  * under the License.
  */
 
+import React from 'react';
 import * as AntdIcons from '@ant-design/icons/lib/icons';
 import { StyledIcon } from './Icon';
 import IconType from './IconType';
@@ -24,10 +25,9 @@ import IconType from './IconType';
 const AntdEnhancedIcons = Object.keys(AntdIcons)
   .filter(k => !k.includes('TwoTone'))
   .map(k => ({
-    [k]: (props: IconType) => {
-      const whatRole = props?.onClick ? 'button' : 'img';
-      return <StyledIcon component={AntdIcons[k]} role={whatRole} {...props} />;
-    },
+    [k]: (props: IconType) => (
+      <StyledIcon component={AntdIcons[k]} {...props} />
+    ),
   }))
   .reduce((l, r) => ({ ...l, ...r }));
 

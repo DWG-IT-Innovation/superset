@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react';
 import {
   ensureIsArray,
   isAdhocColumn,
   isPhysicalColumn,
   QueryFormMetric,
-  SMART_DATE_ID,
+  smartDateFormatter,
   t,
   validateNonEmpty,
 } from '@superset-ui/core';
@@ -298,7 +299,7 @@ const config: ControlPanelConfig = {
               type: 'SelectControl',
               freeForm: true,
               label: t('Date format'),
-              default: SMART_DATE_ID,
+              default: smartDateFormatter.id,
               renderTrigger: true,
               choices: D3_TIME_FORMAT_OPTIONS,
               description: t('D3 time format for datetime columns'),

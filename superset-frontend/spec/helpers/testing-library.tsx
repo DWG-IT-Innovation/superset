@@ -17,7 +17,7 @@
  * under the License.
  */
 import '@testing-library/jest-dom/extend-expect';
-import { ReactNode, ReactElement } from 'react';
+import React, { ReactNode, ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { ThemeProvider, supersetTheme } from '@superset-ui/core';
 import { BrowserRouter } from 'react-router-dom';

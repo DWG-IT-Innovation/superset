@@ -16,6 +16,7 @@
 # under the License.
 from __future__ import annotations
 
+import json
 import pickle
 
 import pytest
@@ -24,10 +25,9 @@ from flask_appbuilder.security.sqla.models import User
 
 from superset.extensions import db
 from superset.key_value.exceptions import KeyValueCreateFailedError
-from superset.utils import json
 from superset.utils.core import override_user
 from tests.integration_tests.key_value.commands.fixtures import (
-    admin,  # noqa: F401
+    admin,
     JSON_CODEC,
     JSON_VALUE,
     PICKLE_CODEC,
@@ -36,7 +36,7 @@ from tests.integration_tests.key_value.commands.fixtures import (
 )
 
 
-def test_create_id_entry(app_context: AppContext, admin: User) -> None:  # noqa: F811
+def test_create_id_entry(app_context: AppContext, admin: User) -> None:
     from superset.commands.key_value.create import CreateKeyValueCommand
     from superset.key_value.models import KeyValueEntry
 
@@ -53,7 +53,7 @@ def test_create_id_entry(app_context: AppContext, admin: User) -> None:  # noqa:
         db.session.commit()
 
 
-def test_create_uuid_entry(app_context: AppContext, admin: User) -> None:  # noqa: F811
+def test_create_uuid_entry(app_context: AppContext, admin: User) -> None:
     from superset.commands.key_value.create import CreateKeyValueCommand
     from superset.key_value.models import KeyValueEntry
 
@@ -68,7 +68,7 @@ def test_create_uuid_entry(app_context: AppContext, admin: User) -> None:  # noq
     db.session.commit()
 
 
-def test_create_fail_json_entry(app_context: AppContext, admin: User) -> None:  # noqa: F811
+def test_create_fail_json_entry(app_context: AppContext, admin: User) -> None:
     from superset.commands.key_value.create import CreateKeyValueCommand
 
     with pytest.raises(KeyValueCreateFailedError):
@@ -79,7 +79,7 @@ def test_create_fail_json_entry(app_context: AppContext, admin: User) -> None:  
         ).run()
 
 
-def test_create_pickle_entry(app_context: AppContext, admin: User) -> None:  # noqa: F811
+def test_create_pickle_entry(app_context: AppContext, admin: User) -> None:
     from superset.commands.key_value.create import CreateKeyValueCommand
     from superset.key_value.models import KeyValueEntry
 

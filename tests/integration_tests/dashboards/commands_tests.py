@@ -15,7 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 import itertools
-from unittest.mock import MagicMock, patch  # noqa: F401
+import json
+from unittest.mock import MagicMock, patch
 
 import pytest
 import yaml
@@ -35,7 +36,6 @@ from superset.connectors.sqla.models import SqlaTable
 from superset.models.core import Database
 from superset.models.dashboard import Dashboard
 from superset.models.slice import Slice
-from superset.utils import json
 from tests.integration_tests.base_tests import SupersetTestCase
 from tests.integration_tests.fixtures.importexport import (
     chart_config,
@@ -47,8 +47,8 @@ from tests.integration_tests.fixtures.importexport import (
     dataset_metadata_config,
 )
 from tests.integration_tests.fixtures.world_bank_dashboard import (
-    load_world_bank_dashboard_with_slices,  # noqa: F401
-    load_world_bank_data,  # noqa: F401
+    load_world_bank_dashboard_with_slices,
+    load_world_bank_data,
 )
 
 
@@ -78,7 +78,7 @@ class TestExportDashboardsCommand(SupersetTestCase):
         assert expected_paths == set(contents.keys())
 
         metadata = yaml.safe_load(
-            contents[f"dashboards/World_Banks_Data_{example_dashboard.id}.yaml"]()
+            contents[f"dashboards/World_Banks_Data_{example_dashboard.id}.yaml"]
         )
 
         # remove chart UUIDs from metadata so we can compare
@@ -269,7 +269,7 @@ class TestExportDashboardsCommand(SupersetTestCase):
         contents = dict(command.run())
 
         metadata = yaml.safe_load(
-            contents[f"dashboards/World_Banks_Data_{example_dashboard.id}.yaml"]()
+            contents[f"dashboards/World_Banks_Data_{example_dashboard.id}.yaml"]
         )
         assert list(metadata.keys()) == [
             "dashboard_title",

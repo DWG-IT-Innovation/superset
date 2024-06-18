@@ -30,7 +30,6 @@ from superset.extensions import db
 from superset.models.core import Database
 from superset.models.dashboard import Dashboard
 from superset.models.slice import Slice
-from superset.sql_parse import Table
 from superset.utils.core import DatasourceType
 from superset.views.base import DatasourceFilter
 
@@ -73,26 +72,25 @@ class DatasetDAO(BaseDAO[SqlaTable]):
 
     @staticmethod
     def validate_table_exists(
-        database: Database,
-        table: Table,
+        database: Database, table_name: str, schema: str | None
     ) -> bool:
         try:
-            database.get_table(table)
+            database.get_table(table_name, schema=schema)
             return True
         except SQLAlchemyError as ex:  # pragma: no cover
-            logger.warning("Got an error %s validating table: %s", str(ex), table)
+            logger.warning("Got an error %s validating table: %s", str(ex), table_name)
             return False
 
     @staticmethod
     def validate_uniqueness(
         database_id: int,
-        table: Table,
+        schema: str | None,
+        name: str,
         dataset_id: int | None = None,
     ) -> bool:
         dataset_query = db.session.query(SqlaTable).filter(
-            SqlaTable.table_name == table.table,
-            SqlaTable.schema == table.schema,
-            SqlaTable.catalog == table.catalog,
+            SqlaTable.table_name == name,
+            SqlaTable.schema == schema,
             SqlaTable.database_id == database_id,
         )
 
@@ -105,14 +103,14 @@ class DatasetDAO(BaseDAO[SqlaTable]):
     @staticmethod
     def validate_update_uniqueness(
         database_id: int,
-        table: Table,
+        schema: str | None,
         dataset_id: int,
+        name: str,
     ) -> bool:
         dataset_query = db.session.query(SqlaTable).filter(
-            SqlaTable.table_name == table.table,
+            SqlaTable.table_name == name,
             SqlaTable.database_id == database_id,
-            SqlaTable.schema == table.schema,
-            SqlaTable.catalog == table.catalog,
+            SqlaTable.schema == schema,
             SqlaTable.id != dataset_id,
         )
         return not db.session.query(dataset_query.exists()).scalar()
@@ -247,7 +245,7 @@ class DatasetDAO(BaseDAO[SqlaTable]):
                 [
                     {**properties, "table_id": model.id}
                     for properties in property_columns
-                    if "id" not in properties
+                    if not "id" in properties
                 ],
             )
 
@@ -299,7 +297,7 @@ class DatasetDAO(BaseDAO[SqlaTable]):
             [
                 {**properties, "table_id": model.id}
                 for properties in property_metrics
-                if "id" not in properties
+                if not "id" in properties
             ],
         )
 

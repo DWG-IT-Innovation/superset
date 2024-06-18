@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { SyntheticEvent } from 'react';
+import React, { SyntheticEvent } from 'react';
 import { logging, t } from '@superset-ui/core';
 import { Menu } from 'src/components/Menu';
 import downloadAsPdf from 'src/utils/downloadAsPdf';

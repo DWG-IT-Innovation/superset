@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react';
 import { fireEvent, render, waitFor } from 'spec/helpers/testing-library';
 import { OptionControlLabel } from 'src/explore/components/controls/OptionControls';
 

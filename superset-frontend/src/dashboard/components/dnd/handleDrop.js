@@ -55,11 +55,8 @@ export default function handleDrop(props, monitor, Component) {
     },
   };
 
-  const shouldAppendToChildren =
-    typeof dropToChild === 'function' ? dropToChild(draggingItem) : dropToChild;
-
   // simplest case, append as child
-  if (shouldAppendToChildren) {
+  if (dropToChild) {
     dropResult.destination = {
       id: component.id,
       type: component.type,
@@ -77,9 +74,7 @@ export default function handleDrop(props, monitor, Component) {
     const sameParent =
       parentComponent && draggingItem.parentId === parentComponent.id;
     const sameParentLowerIndex =
-      sameParent &&
-      draggingItem.index < componentIndex &&
-      draggingItem.type !== component.type;
+      sameParent && draggingItem.index < componentIndex;
 
     const nextIndex = sameParentLowerIndex
       ? componentIndex - 1

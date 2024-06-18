@@ -16,8 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import {
-  memo,
+import React, {
   ReactElement,
   useCallback,
   useEffect,
@@ -197,7 +196,7 @@ const VizTile = ({
   );
 };
 
-export const FastVizSwitcher = memo(
+export const FastVizSwitcher = React.memo(
   ({ currentSelection, onChange }: FastVizSwitcherProps) => {
     const currentViz = useSelector<ExplorePageState, string | undefined>(
       state =>

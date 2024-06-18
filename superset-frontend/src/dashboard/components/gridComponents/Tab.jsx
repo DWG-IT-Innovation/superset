@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { PureComponent, Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
@@ -32,7 +32,6 @@ import DragDroppable, {
   Droppable,
 } from 'src/dashboard/components/dnd/DragDroppable';
 import { componentShape } from 'src/dashboard/util/propShapes';
-import { TAB_TYPE } from 'src/dashboard/util/componentTypes';
 
 export const RENDER_TAB = 'RENDER_TAB';
 export const RENDER_TAB_CONTENT = 'RENDER_TAB_CONTENT';
@@ -89,7 +88,7 @@ const TabTitleContainer = styled.div`
 const renderDraggableContent = dropProps =>
   dropProps.dropIndicatorProps && <div {...dropProps.dropIndicatorProps} />;
 
-class Tab extends PureComponent {
+class Tab extends React.PureComponent {
   constructor(props) {
     super(props);
     this.handleChangeText = this.handleChangeText.bind(this);
@@ -138,10 +137,6 @@ class Tab extends PureComponent {
         },
       });
     }
-  }
-
-  shouldDropToChild(item) {
-    return item.type !== TAB_TYPE;
   }
 
   renderTabContent() {
@@ -223,7 +218,7 @@ class Tab extends PureComponent {
           />
         )}
         {tabComponent.children.map((componentId, componentIndex) => (
-          <Fragment key={componentId}>
+          <React.Fragment key={componentId}>
             <DashboardComponent
               id={componentId}
               parentId={tabComponent.id}
@@ -253,7 +248,7 @@ class Tab extends PureComponent {
                 {renderDraggableContent}
               </Droppable>
             )}
-          </Fragment>
+          </React.Fragment>
         ))}
       </div>
     );
@@ -280,7 +275,6 @@ class Tab extends PureComponent {
         onDrop={this.handleDrop}
         onHover={this.handleOnHover}
         editMode={editMode}
-        dropToChild={this.shouldDropToChild}
       >
         {({ dropIndicatorProps, dragSourceRef }) => (
           <TabTitleContainer

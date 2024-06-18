@@ -32,13 +32,12 @@ from superset.commands.chart.exceptions import (
     DashboardsNotFoundValidationError,
     DatasourceTypeUpdateRequiredValidationError,
 )
-from superset.commands.utils import get_datasource_by_id, update_tags, validate_tags
+from superset.commands.utils import get_datasource_by_id
 from superset.daos.chart import ChartDAO
 from superset.daos.dashboard import DashboardDAO
-from superset.daos.exceptions import DAODeleteFailedError, DAOUpdateFailedError
+from superset.daos.exceptions import DAOUpdateFailedError
 from superset.exceptions import SupersetSecurityException
 from superset.models.slice import Slice
-from superset.tags.models import ObjectType
 
 logger = logging.getLogger(__name__)
 
@@ -60,16 +59,11 @@ class UpdateChartCommand(UpdateMixin, BaseCommand):
         assert self._model
 
         try:
-            # Update tags
-            tags = self._properties.pop("tags", None)
-            if tags is not None:
-                update_tags(ObjectType.chart, self._model.id, self._model.tags, tags)
-
             if self._properties.get("query_context_generation") is None:
                 self._properties["last_saved_at"] = datetime.now()
                 self._properties["last_saved_by"] = g.user
             chart = ChartDAO.update(self._model, self._properties)
-        except (DAOUpdateFailedError, DAODeleteFailedError) as ex:
+        except DAOUpdateFailedError as ex:
             logger.exception(ex.exception)
             raise ChartUpdateFailedError() from ex
         return chart
@@ -78,7 +72,6 @@ class UpdateChartCommand(UpdateMixin, BaseCommand):
         exceptions: list[ValidationError] = []
         dashboard_ids = self._properties.get("dashboards")
         owner_ids: Optional[list[int]] = self._properties.get("owners")
-        tag_ids: Optional[list[int]] = self._properties.get("tags")
 
         # Validate if datasource_id is provided datasource_type is required
         datasource_id = self._properties.get("datasource_id")
@@ -106,12 +99,6 @@ class UpdateChartCommand(UpdateMixin, BaseCommand):
                 raise ChartForbiddenError() from ex
             except ValidationError as ex:
                 exceptions.append(ex)
-
-        # validate tags
-        try:
-            validate_tags(ObjectType.chart, self._model.tags, tag_ids)
-        except ValidationError as ex:
-            exceptions.append(ex)
 
         # Validate/Populate datasource
         if datasource_id is not None:

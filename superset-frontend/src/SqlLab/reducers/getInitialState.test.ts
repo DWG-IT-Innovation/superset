@@ -301,9 +301,6 @@ describe('getInitialState', () => {
           name: expectedValue,
         }),
       );
-      expect(
-        getInitialState(apiDataWithLocalStorage).sqlLab.lastUpdatedActiveTab,
-      ).toEqual(apiDataWithTabState.active_tab.id.toString());
     });
 
     it('skip unsaved changes for expired data', () => {

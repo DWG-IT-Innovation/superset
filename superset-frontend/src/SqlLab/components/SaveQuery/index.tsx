@@ -16,8 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { useState, useEffect, useMemo, ChangeEvent } from 'react';
-
+import React, { useState, useEffect, useMemo } from 'react';
 import type { DatabaseObject } from 'src/features/databases/types';
 import { Row, Col } from 'src/components';
 import { Input, TextArea } from 'src/components/Input';
@@ -49,7 +48,7 @@ export type QueryPayload = {
   description?: string;
   id?: string;
   remoteId?: number;
-} & Pick<QueryEditor, 'dbId' | 'catalog' | 'schema' | 'sql'>;
+} & Pick<QueryEditor, 'dbId' | 'schema' | 'sql'>;
 
 const Styles = styled.span`
   span[role='img'] {
@@ -79,7 +78,6 @@ const SaveQuery = ({
     'dbId',
     'latestQueryId',
     'queryLimit',
-    'catalog',
     'schema',
     'selectedText',
     'sql',
@@ -117,7 +115,6 @@ const SaveQuery = ({
     description,
     dbId: query.dbId ?? 0,
     sql: query.sql,
-    catalog: query.catalog,
     schema: query.schema,
     templateParams: query.templateParams,
     remoteId: query?.remoteId || undefined,
@@ -139,11 +136,11 @@ const SaveQuery = ({
     close();
   };
 
-  const onLabelChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLabel(e.target.value);
   };
 
-  const onDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const onDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value);
   };
 

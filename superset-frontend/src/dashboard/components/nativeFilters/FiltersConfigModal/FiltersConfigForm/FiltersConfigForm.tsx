@@ -37,19 +37,15 @@ import {
   styled,
   SupersetApiError,
   t,
-  ClientErrorObject,
-  getClientErrorObject,
 } from '@superset-ui/core';
 import { isEqual } from 'lodash';
-import {
+import React, {
   forwardRef,
   useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
   useState,
-  RefObject,
-  memo,
 } from 'react';
 import rison from 'rison';
 import { PluginFilterSelectCustomizeProps } from 'src/filters/components/Select/types';
@@ -77,6 +73,10 @@ import {
 import DateFilterControl from 'src/explore/components/controls/DateFilterControl';
 import AdhocFilterControl from 'src/explore/components/controls/FilterControl/AdhocFilterControl';
 import { waitForAsyncData } from 'src/middleware/asyncEvent';
+import {
+  ClientErrorObject,
+  getClientErrorObject,
+} from 'src/utils/getClientErrorObject';
 import { SingleValueType } from 'src/filters/components/Range/SingleValueType';
 import {
   getFormData,
@@ -347,7 +347,7 @@ const FiltersConfigForm = (
     getDependencySuggestion,
     isActive,
   }: FiltersConfigFormProps,
-  ref: RefObject<any>,
+  ref: React.RefObject<any>,
 ) => {
   const isRemoved = !!removedFilters[filterId];
   const [error, setError] = useState<ClientErrorObject>();
@@ -1314,7 +1314,7 @@ const FiltersConfigForm = (
   );
 };
 
-export default memo(
+export default React.memo(
   forwardRef<typeof FiltersConfigForm, FiltersConfigFormProps>(
     FiltersConfigForm,
   ),

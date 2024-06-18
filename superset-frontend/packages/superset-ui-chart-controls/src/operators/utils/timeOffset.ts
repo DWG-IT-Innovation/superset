@@ -20,23 +20,19 @@
 import { JsonObject } from '@superset-ui/core';
 import { isString } from 'lodash';
 
-export const getTimeOffset = (
-  series: JsonObject,
-  timeCompare: string[],
-): string | undefined =>
-  timeCompare.find(
-    timeOffset =>
-      // offset is represented as <offset>, group by list
-      series.name.includes(`${timeOffset},`) ||
-      // offset is represented as <metric>__<offset>
-      series.name.includes(`__${timeOffset}`),
-  );
-
 export const hasTimeOffset = (
   series: JsonObject,
   timeCompare: string[],
 ): boolean =>
-  isString(series.name) ? !!getTimeOffset(series, timeCompare) : false;
+  isString(series.name)
+    ? !!timeCompare.find(
+        timeOffset =>
+          // offset is represented as <offset>, group by list
+          series.name.includes(`${timeOffset},`) ||
+          // offset is represented as <metric>__<offset>
+          series.name.includes(`__${timeOffset}`),
+      )
+    : false;
 
 export const getOriginalSeries = (
   seriesName: string,

@@ -21,6 +21,7 @@ import {
   AnnotationLayer,
   AxisType,
   ContributionType,
+  QueryFormColumn,
   QueryFormData,
   QueryFormMetric,
   TimeFormatter,
@@ -86,6 +87,7 @@ export type EchartsTimeseriesFormData = QueryFormData & {
   zoomable: boolean;
   richTooltip: boolean;
   xAxisLabelRotation: number;
+  groupby: QueryFormColumn[];
   showValue: boolean;
   onlyTotal: boolean;
   showExtraControls: boolean;

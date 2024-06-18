@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import type { Table } from 'src/SqlLab/types';
 import Collapse from 'src/components/Collapse';
@@ -101,7 +101,7 @@ const StyledCollapsePanel = styled(Collapse.Panel)`
 `;
 
 const TableElement = ({ table, ...props }: TableElementProps) => {
-  const { dbId, catalog, schema, name, expanded } = table;
+  const { dbId, schema, name, expanded } = table;
   const theme = useTheme();
   const dispatch = useDispatch();
   const {
@@ -112,7 +112,6 @@ const TableElement = ({ table, ...props }: TableElementProps) => {
   } = useTableMetadataQuery(
     {
       dbId,
-      catalog,
       schema,
       table: name,
     },
@@ -126,7 +125,6 @@ const TableElement = ({ table, ...props }: TableElementProps) => {
   } = useTableExtendedMetadataQuery(
     {
       dbId,
-      catalog,
       schema,
       table: name,
     },

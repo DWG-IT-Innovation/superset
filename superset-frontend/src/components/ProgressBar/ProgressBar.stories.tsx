@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react';
 import ProgressBar, { ProgressBarProps } from '.';
 
 export default {
@@ -42,19 +43,19 @@ InteractiveProgressBar.argTypes = {
   status: {
     control: {
       type: 'select',
+      options: ['normal', 'success', 'exception', 'active'],
     },
-    options: ['normal', 'success', 'exception', 'active'],
   },
   strokeLinecap: {
     control: {
       type: 'select',
+      options: ['round', 'square'],
     },
-    options: ['round', 'square'],
   },
   type: {
     control: {
       type: 'select',
+      options: ['line', 'circle', 'dashboard'],
     },
-    options: ['line', 'circle', 'dashboard'],
   },
 };

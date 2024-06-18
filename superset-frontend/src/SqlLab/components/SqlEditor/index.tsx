@@ -18,16 +18,14 @@
  */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import {
+import React, {
   useState,
   useEffect,
   useMemo,
   useRef,
   useCallback,
   ChangeEvent,
-  FC,
 } from 'react';
-
 import type AceEditor from 'react-ace';
 import useEffectEvent from 'src/hooks/useEffectEvent';
 import { CSSTransition } from 'react-transition-group';
@@ -79,7 +77,7 @@ import {
   setActiveSouthPaneTab,
   updateSavedQuery,
   formatQuery,
-  fetchQueryEditor,
+  switchQueryEditor,
 } from 'src/SqlLab/actions/sqlLab';
 import {
   STATE_TYPE_MAP,
@@ -236,7 +234,7 @@ const elementStyle = (
   }px)`,
 });
 
-const SqlEditor: FC<Props> = ({
+const SqlEditor: React.FC<Props> = ({
   queryEditor,
   defaultQueryLimit,
   maxRow,
@@ -285,9 +283,6 @@ const SqlEditor: FC<Props> = ({
   );
   const [autocompleteEnabled, setAutocompleteEnabled] = useState(
     getItem(LocalStorageKeys.SqllabIsAutocompleteEnabled, true),
-  );
-  const [renderHTMLEnabled, setRenderHTMLEnabled] = useState(
-    getItem(LocalStorageKeys.SqllabIsRenderHtmlEnabled, false),
   );
   const [showCreateAsModal, setShowCreateAsModal] = useState(false);
   const [createAs, setCreateAs] = useState('');
@@ -506,7 +501,7 @@ const SqlEditor: FC<Props> = ({
 
   const loadQueryEditor = useEffectEvent(() => {
     if (shouldLoadQueryEditor) {
-      dispatch(fetchQueryEditor(queryEditor, displayLimit));
+      dispatch(switchQueryEditor(queryEditor, displayLimit));
     }
   });
 
@@ -612,11 +607,6 @@ const SqlEditor: FC<Props> = ({
     setAutocompleteEnabled(!autocompleteEnabled);
   };
 
-  const handleToggleRenderHTMLEnabled = () => {
-    setItem(LocalStorageKeys.SqllabIsRenderHtmlEnabled, !renderHTMLEnabled);
-    setRenderHTMLEnabled(!renderHTMLEnabled);
-  };
-
   const createTableAs = () => {
     startQuery(true, CtasEnum.Table);
     setShowCreateAsModal(false);
@@ -641,14 +631,6 @@ const SqlEditor: FC<Props> = ({
       : t('You must run the query successfully first');
     return (
       <Menu css={{ width: theme.gridUnit * 50 }}>
-        <Menu.Item css={{ display: 'flex', justifyContent: 'space-between' }}>
-          {' '}
-          <span>{t('Render HTML')}</span>{' '}
-          <AntdSwitch
-            checked={renderHTMLEnabled}
-            onChange={handleToggleRenderHTMLEnabled}
-          />{' '}
-        </Menu.Item>
         <Menu.Item css={{ display: 'flex', justifyContent: 'space-between' }}>
           {' '}
           <span>{t('Autocomplete')}</span>{' '}

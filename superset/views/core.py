@@ -23,6 +23,7 @@ from datetime import datetime
 from typing import Any, Callable, cast
 from urllib import parse
 
+import simplejson as json
 from flask import abort, flash, g, redirect, render_template, request, Response
 from flask_appbuilder import expose
 from flask_appbuilder.security.decorators import (
@@ -70,9 +71,10 @@ from superset.models.slice import Slice
 from superset.models.sql_lab import Query
 from superset.models.user_attributes import UserAttribute
 from superset.superset_typing import FlaskResponse
-from superset.utils import core as utils, json
+from superset.utils import core as utils
 from superset.utils.cache import etag_cache
 from superset.utils.core import (
+    base_json_conv,
     DatasourceType,
     get_user_id,
     ReservedUrlParameters,
@@ -204,7 +206,7 @@ class Superset(BaseSupersetView):
     @permission_name("explore_json")
     @expose("/explore_json/data/<cache_key>", methods=("GET",))
     @check_resource_permissions(check_explore_cache_perms)
-    @deprecated(eol_version="5.0.0")
+    @deprecated(eol_version="4.0.0")
     def explore_json_data(self, cache_key: str) -> FlaskResponse:
         """Serves cached result data for async explore_json calls
 
@@ -257,7 +259,7 @@ class Superset(BaseSupersetView):
     )
     @etag_cache()
     @check_resource_permissions(check_datasource_perms)
-    @deprecated(eol_version="5.0.0")
+    @deprecated(eol_version="4.0.0")
     def explore_json(
         self, datasource_type: str | None = None, datasource_id: int | None = None
     ) -> FlaskResponse:
@@ -575,7 +577,7 @@ class Superset(BaseSupersetView):
         return self.render_template(
             "superset/basic.html",
             bootstrap_data=json.dumps(
-                bootstrap_data, default=json.pessimistic_json_iso_dttm_ser
+                bootstrap_data, default=utils.pessimistic_json_iso_dttm_ser
             ),
             entry="explore",
             title=title,
@@ -763,7 +765,7 @@ class Superset(BaseSupersetView):
                     }
                     for slc in slices
                 ],
-                default=json.base_json_conv,
+                default=base_json_conv,
             ),
         )
 
@@ -817,7 +819,7 @@ class Superset(BaseSupersetView):
                     "user": bootstrap_user_data(g.user, include_perms=True),
                     "common": common_bootstrap_payload(),
                 },
-                default=json.pessimistic_json_iso_dttm_ser,
+                default=utils.pessimistic_json_iso_dttm_ser,
             ),
             standalone_mode=ReservedUrlParameters.is_standalone_mode(),
         )
@@ -918,7 +920,7 @@ class Superset(BaseSupersetView):
             "superset/spa.html",
             entry="spa",
             bootstrap_data=json.dumps(
-                payload, default=json.pessimistic_json_iso_dttm_ser
+                payload, default=utils.pessimistic_json_iso_dttm_ser
             ),
         )
 

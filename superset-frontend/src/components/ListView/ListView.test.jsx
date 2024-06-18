@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react';
 import { styledMount as mount } from 'spec/helpers/theming';
 import { act } from 'react-dom/test-utils';
 import { QueryParamProvider } from 'use-query-params';

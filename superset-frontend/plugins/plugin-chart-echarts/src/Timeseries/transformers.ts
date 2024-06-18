@@ -62,7 +62,7 @@ import {
   formatAnnotationLabel,
   parseAnnotationOpacity,
 } from '../utils/annotation';
-import { getChartPadding, getTimeCompareStackId } from '../utils/series';
+import { getChartPadding } from '../utils/series';
 import {
   OpacityEnum,
   StackControlsValue,
@@ -143,7 +143,6 @@ export function transformSeries(
   colorScaleKey: string,
   opts: {
     area?: boolean;
-    connectNulls?: boolean;
     filterState?: FilterState;
     seriesContexts?: { [key: string]: ForecastSeriesEnum[] };
     markerEnabled?: boolean;
@@ -151,7 +150,6 @@ export function transformSeries(
     areaOpacity?: number;
     seriesType?: EchartsTimeseriesSeriesType;
     stack?: StackType;
-    stackIdSuffix?: string;
     yAxisIndex?: number;
     showValue?: boolean;
     onlyTotal?: boolean;
@@ -166,14 +164,11 @@ export function transformSeries(
     isHorizontal?: boolean;
     lineStyle?: LineStyleOption;
     queryIndex?: number;
-    timeCompare?: string[];
-    decalStyle?: {};
   },
 ): SeriesOption | undefined {
   const { name } = series;
   const {
     area,
-    connectNulls,
     filterState,
     seriesContexts = {},
     markerEnabled,
@@ -181,7 +176,6 @@ export function transformSeries(
     areaOpacity = 1,
     seriesType,
     stack,
-    stackIdSuffix,
     yAxisIndex = 0,
     showValue,
     onlyTotal,
@@ -194,8 +188,6 @@ export function transformSeries(
     sliceId,
     isHorizontal = false,
     queryIndex = 0,
-    timeCompare = [],
-    decalStyle,
   } = opts;
   const contexts = seriesContexts[name || ''] || [];
   const hasForecast =
@@ -225,12 +217,9 @@ export function transformSeries(
   } else if (stack && isObservation) {
     // the suffix of the observation series is '' (falsy), which disables
     // stacking. Therefore we need to set something that is truthy.
-    stackId = getTimeCompareStackId('obs', timeCompare, name);
+    stackId = 'obs';
   } else if (stack && isTrend) {
-    stackId = getTimeCompareStackId(forecastSeries.type, timeCompare, name);
-  }
-  if (stackId && stackIdSuffix) {
-    stackId += stackIdSuffix;
+    stackId = forecastSeries.type;
   }
   let plotType;
   if (
@@ -244,15 +233,10 @@ export function transformSeries(
     plotType = seriesType === 'bar' ? 'bar' : 'line';
   }
   // forcing the colorScale to return a different color for same metrics across different queries
-  let itemStyle = {
+  const itemStyle = {
     color: colorScale(colorScaleKey, sliceId),
     opacity,
-  } as ItemStyleOption;
-
-  if (Object.keys(decalStyle as object).length !== 0) {
-    itemStyle.decal = decalStyle;
-  }
-
+  };
   let emphasis = {};
   let showSymbol = false;
   if (!isConfidenceBand) {
@@ -282,7 +266,6 @@ export function transformSeries(
       : { ...opts.lineStyle, opacity };
   return {
     ...series,
-    connectNulls,
     queryIndex,
     yAxisIndex,
     name: forecastSeries.name,

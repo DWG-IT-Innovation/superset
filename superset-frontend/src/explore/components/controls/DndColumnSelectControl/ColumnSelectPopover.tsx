@@ -17,7 +17,7 @@
  * under the License.
  */
 /* eslint-disable camelcase */
-import {
+import React, {
   Dispatch,
   SetStateAction,
   useCallback,
@@ -74,7 +74,6 @@ interface ColumnSelectPopoverProps {
   label: string;
   isTemporal?: boolean;
   setDatasetModal?: Dispatch<SetStateAction<boolean>>;
-  disabledTabs?: Set<string>;
 }
 
 const getInitialColumnValues = (
@@ -103,7 +102,6 @@ const ColumnSelectPopover = ({
   onClose,
   setDatasetModal,
   setLabel,
-  disabledTabs = new Set<'saved' | 'simple' | 'sqlExpression'>(),
 }: ColumnSelectPopoverProps) => {
   const datasourceType = useSelector<ExplorePageState, string | undefined>(
     state => state.explore.datasource.type,
@@ -301,11 +299,7 @@ const ColumnSelectPopover = ({
           width: ${width}px;
         `}
       >
-        <Tabs.TabPane
-          key="saved"
-          tab={t('Saved')}
-          disabled={disabledTabs.has('saved')}
-        >
+        <Tabs.TabPane key="saved" tab={t('Saved')}>
           {calculatedColumns.length > 0 ? (
             <FormItem label={savedExpressionsLabel}>
               <StyledSelect
@@ -381,11 +375,7 @@ const ColumnSelectPopover = ({
             />
           )}
         </Tabs.TabPane>
-        <Tabs.TabPane
-          key="simple"
-          tab={t('Simple')}
-          disabled={disabledTabs.has('simple')}
-        >
+        <Tabs.TabPane key="simple" tab={t('Simple')}>
           {isTemporal && simpleColumns.length === 0 ? (
             <EmptyStateSmall
               image="empty.svg"
@@ -429,11 +419,7 @@ const ColumnSelectPopover = ({
           )}
         </Tabs.TabPane>
 
-        <Tabs.TabPane
-          key="sqlExpression"
-          tab={t('Custom SQL')}
-          disabled={disabledTabs.has('sqlExpression')}
-        >
+        <Tabs.TabPane key="sqlExpression" tab={t('Custom SQL')}>
           <SQLEditor
             value={
               adhocColumn?.sqlExpression ||

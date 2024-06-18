@@ -19,6 +19,7 @@
 
 import { Source, Story } from '@storybook/addon-docs';
 import Markdown from 'markdown-to-jsx';
+import React from 'react';
 
 export default {
   title: 'Design System/Components/MetadataBar/Overview',

@@ -20,7 +20,7 @@ import {
   CustomControlItem,
   InfoTooltipWithTrigger,
 } from '@superset-ui/chart-controls';
-import { ReactNode } from 'react';
+import React from 'react';
 import { AntdCheckbox, FormInstance } from 'src/components';
 import {
   Filter,
@@ -75,11 +75,11 @@ export default function getControlItemsMap({
     getControlItems(controlPanelRegistry.get(filterType)) ?? [];
   const mapControlItems: Record<
     string,
-    { element: ReactNode; checked: boolean }
+    { element: React.ReactNode; checked: boolean }
   > = {};
   const mapMainControlItems: Record<
     string,
-    { element: ReactNode; checked: boolean }
+    { element: React.ReactNode; checked: boolean }
   > = {};
 
   controlItems

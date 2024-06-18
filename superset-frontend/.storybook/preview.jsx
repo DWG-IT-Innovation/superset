@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react';
 import { jsxDecorator } from 'storybook-addon-jsx';
 import { supersetTheme, ThemeProvider } from '@superset-ui/core';
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux';

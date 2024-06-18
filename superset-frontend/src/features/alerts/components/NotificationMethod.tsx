@@ -16,8 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { FunctionComponent, useState, ChangeEvent } from 'react';
-
+import React, { FunctionComponent, useState } from 'react';
 import { styled, t, useTheme } from '@superset-ui/core';
 import { Select } from 'src/components';
 import Icons from 'src/components/Icons';
@@ -30,12 +29,6 @@ const StyledNotificationMethod = styled.div`
   .input-container {
     textarea {
       height: auto;
-    }
-
-    &.error {
-      input {
-        border-color: ${({ theme }) => theme.colors.error.base};
-      }
     }
   }
 
@@ -58,36 +51,18 @@ interface NotificationMethodProps {
   index: number;
   onUpdate?: (index: number, updatedSetting: NotificationSetting) => void;
   onRemove?: (index: number) => void;
-  onInputChange?: (
-    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => void;
-  email_subject: string;
-  defaultSubject: string;
-  setErrorSubject: (hasError: boolean) => void;
 }
-
-const TRANSLATIONS = {
-  EMAIL_SUBJECT_NAME: t('Email subject name (optional)'),
-  EMAIL_SUBJECT_ERROR_TEXT: t(
-    'Please enter valid text. Spaces alone are not permitted.',
-  ),
-};
 
 export const NotificationMethod: FunctionComponent<NotificationMethodProps> = ({
   setting = null,
   index,
   onUpdate,
   onRemove,
-  onInputChange,
-  email_subject,
-  defaultSubject,
-  setErrorSubject,
 }) => {
   const { method, recipients, options } = setting || {};
   const [recipientValue, setRecipientValue] = useState<string>(
     recipients || '',
   );
-  const [error, setError] = useState(false);
   const theme = useTheme();
 
   if (!setting) {
@@ -108,7 +83,9 @@ export const NotificationMethod: FunctionComponent<NotificationMethodProps> = ({
     }
   };
 
-  const onRecipientsChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+  const onRecipientsChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     const { target } = event;
 
     setRecipientValue(target.value);
@@ -120,22 +97,6 @@ export const NotificationMethod: FunctionComponent<NotificationMethodProps> = ({
       };
 
       onUpdate(index, updatedSetting);
-    }
-  };
-
-  const onSubjectChange = (
-    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => {
-    const { value } = event.target;
-
-    if (onInputChange) {
-      onInputChange(event);
-    }
-
-    const hasError = value.length > 0 && value.trim().length === 0;
-    setError(hasError);
-    if (setErrorSubject) {
-      setErrorSubject(hasError);
     }
   };
 
@@ -177,57 +138,23 @@ export const NotificationMethod: FunctionComponent<NotificationMethodProps> = ({
         </StyledInputContainer>
       </div>
       {method !== undefined ? (
-        <>
-          <div className="inline-container">
-            <StyledInputContainer>
-              {method === 'Email' ? (
-                <>
-                  <div className="control-label">
-                    {TRANSLATIONS.EMAIL_SUBJECT_NAME}
-                  </div>
-                  <div className={`input-container ${error ? 'error' : ''}`}>
-                    <input
-                      type="text"
-                      name="email_subject"
-                      value={email_subject}
-                      placeholder={defaultSubject}
-                      onChange={onSubjectChange}
-                    />
-                  </div>
-                  {error && (
-                    <div
-                      style={{
-                        color: theme.colors.error.base,
-                        fontSize: theme.gridUnit * 3,
-                      }}
-                    >
-                      {TRANSLATIONS.EMAIL_SUBJECT_ERROR_TEXT}
-                    </div>
-                  )}
-                </>
-              ) : null}
-            </StyledInputContainer>
+        <StyledInputContainer>
+          <div className="control-label">
+            {t('%s recipients', method)}
+            <span className="required">*</span>
           </div>
-          <div className="inline-container">
-            <StyledInputContainer>
-              <div className="control-label">
-                {t('%s recipients', method)}
-                <span className="required">*</span>
-              </div>
-              <div className="input-container">
-                <textarea
-                  name="recipients"
-                  data-test="recipients"
-                  value={recipientValue}
-                  onChange={onRecipientsChange}
-                />
-              </div>
-              <div className="helper">
-                {t('Recipients are separated by "," or ";"')}
-              </div>
-            </StyledInputContainer>
+          <div className="input-container">
+            <textarea
+              name="recipients"
+              data-test="recipients"
+              value={recipientValue}
+              onChange={onRecipientsChange}
+            />
           </div>
-        </>
+          <div className="helper">
+            {t('Recipients are separated by "," or ";"')}
+          </div>
+        </StyledInputContainer>
       ) : null}
     </StyledNotificationMethod>
   );

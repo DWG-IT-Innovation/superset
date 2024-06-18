@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { createContext, lazy, FC, useEffect, useMemo, useRef } from 'react';
+import React, { FC, useEffect, useMemo, useRef } from 'react';
 import { Global } from '@emotion/react';
 import { useHistory } from 'react-router-dom';
 import {
@@ -53,17 +53,15 @@ import { RootState } from '../types';
 import {
   chartContextMenuStyles,
   filterCardPopoverStyle,
-  focusStyle,
   headerStyles,
-  chartHeaderStyles,
 } from '../styles';
 import SyncDashboardState, {
   getDashboardContextLocalStorage,
 } from '../components/SyncDashboardState';
 
-export const DashboardPageIdContext = createContext('');
+export const DashboardPageIdContext = React.createContext('');
 
-const DashboardBuilder = lazy(
+const DashboardBuilder = React.lazy(
   () =>
     import(
       /* webpackChunkName: "DashboardContainer" */
@@ -220,8 +218,6 @@ export const DashboardPage: FC<PageProps> = ({ idOrSlug }: PageProps) => {
           filterCardPopoverStyle(theme),
           headerStyles(theme),
           chartContextMenuStyles(theme),
-          focusStyle(theme),
-          chartHeaderStyles(theme),
         ]}
       />
       <SyncDashboardState dashboardPageId={dashboardPageId} />

@@ -16,8 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { forwardRef, useEffect, ComponentType } from 'react';
-
+import React, { forwardRef, useEffect } from 'react';
 import {
   Editor as OrigEditor,
   IEditSession,
@@ -93,7 +92,7 @@ export type AsyncAceEditorOptions = {
   defaultTheme?: AceEditorTheme;
   defaultTabSize?: number;
   fontFamily?: string;
-  placeholder?: ComponentType<
+  placeholder?: React.ComponentType<
     PlaceholderProps & Partial<IAceEditorProps>
   > | null;
 };

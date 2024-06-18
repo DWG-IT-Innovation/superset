@@ -16,7 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { useCallback, useEffect, useMemo, useState, MouseEvent } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  MouseEvent,
+} from 'react';
 import {
   isFeatureEnabled,
   FeatureFlag,

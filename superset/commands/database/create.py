@@ -19,6 +19,7 @@ from typing import Any, Optional
 
 from flask import current_app
 from flask_appbuilder.models.sqla import Model
+from flask_babel import gettext as _
 from marshmallow import ValidationError
 
 from superset import is_feature_enabled
@@ -68,7 +69,7 @@ class CreateDatabaseCommand(BaseCommand):
                 engine=self._properties.get("sqlalchemy_uri", "").split(":")[0],
             )
             # So we can show the original message
-            raise
+            raise ex
         except Exception as ex:
             event_logger.log_with_context(
                 action=f"db_creation_failed.{ex.__class__.__name__}",
@@ -97,37 +98,12 @@ class CreateDatabaseCommand(BaseCommand):
 
             db.session.commit()
 
-            # add catalog/schema permissions
-            if database.db_engine_spec.supports_catalog:
-                catalogs = database.get_all_catalog_names(
-                    cache=False,
-                    ssh_tunnel=ssh_tunnel,
+            # adding a new database we always want to force refresh schema list
+            schemas = database.get_all_schema_names(cache=False, ssh_tunnel=ssh_tunnel)
+            for schema in schemas:
+                security_manager.add_permission_view_menu(
+                    "schema_access", security_manager.get_schema_perm(database, schema)
                 )
-                for catalog in catalogs:
-                    security_manager.add_permission_view_menu(
-                        "catalog_access",
-                        security_manager.get_catalog_perm(
-                            database.database_name, catalog
-                        ),
-                    )
-            else:
-                # add a dummy catalog for DBs that don't support them
-                catalogs = [None]
-
-            for catalog in catalogs:
-                for schema in database.get_all_schema_names(
-                    catalog=catalog,
-                    cache=False,
-                    ssh_tunnel=ssh_tunnel,
-                ):
-                    security_manager.add_permission_view_menu(
-                        "schema_access",
-                        security_manager.get_schema_perm(
-                            database.database_name,
-                            catalog,
-                            schema,
-                        ),
-                    )
 
         except (
             SSHTunnelInvalidError,
@@ -141,7 +117,7 @@ class CreateDatabaseCommand(BaseCommand):
                 engine=self._properties.get("sqlalchemy_uri", "").split(":")[0],
             )
             # So we can show the original message
-            raise
+            raise ex
         except (
             DAOCreateFailedError,
             DatabaseInvalidError,

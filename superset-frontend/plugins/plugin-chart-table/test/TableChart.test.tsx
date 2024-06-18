@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react';
 import { CommonWrapper } from 'enzyme';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';

@@ -26,7 +26,6 @@ import {
   getSharedLabelColor,
   SupersetClient,
   t,
-  getClientErrorObject,
 } from '@superset-ui/core';
 import {
   addChart,
@@ -35,6 +34,7 @@ import {
 } from 'src/components/Chart/chartAction';
 import { chart as initChart } from 'src/components/Chart/chartReducer';
 import { applyDefaultFormData } from 'src/explore/store';
+import { getClientErrorObject } from 'src/utils/getClientErrorObject';
 import {
   SAVE_TYPE_OVERWRITE,
   SAVE_TYPE_OVERWRITE_CONFIRMED,
@@ -603,8 +603,6 @@ export function setActiveTab(tabId, prevTabId) {
   return { type: SET_ACTIVE_TAB, tabId, prevTabId };
 }
 
-// Even though SET_ACTIVE_TABS is not being called from Superset's codebase,
-// it is being used by Preset extensions.
 export const SET_ACTIVE_TABS = 'SET_ACTIVE_TABS';
 export function setActiveTabs(activeTabs) {
   return { type: SET_ACTIVE_TABS, activeTabs };

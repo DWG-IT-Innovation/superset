@@ -14,6 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+import json
 import logging
 from typing import Any, Optional
 
@@ -29,14 +30,12 @@ from superset.commands.dashboard.exceptions import (
     DashboardSlugExistsValidationError,
     DashboardUpdateFailedError,
 )
-from superset.commands.utils import populate_roles, update_tags, validate_tags
+from superset.commands.utils import populate_roles
 from superset.daos.dashboard import DashboardDAO
-from superset.daos.exceptions import DAODeleteFailedError, DAOUpdateFailedError
+from superset.daos.exceptions import DAOUpdateFailedError
 from superset.exceptions import SupersetSecurityException
 from superset.extensions import db
 from superset.models.dashboard import Dashboard
-from superset.tags.models import ObjectType
-from superset.utils import json
 
 logger = logging.getLogger(__name__)
 
@@ -52,13 +51,6 @@ class UpdateDashboardCommand(UpdateMixin, BaseCommand):
         assert self._model
 
         try:
-            # Update tags
-            tags = self._properties.pop("tags", None)
-            if tags is not None:
-                update_tags(
-                    ObjectType.dashboard, self._model.id, self._model.tags, tags
-                )
-
             dashboard = DashboardDAO.update(self._model, self._properties, commit=False)
             if self._properties.get("json_metadata"):
                 dashboard = DashboardDAO.set_dash_metadata(
@@ -67,7 +59,7 @@ class UpdateDashboardCommand(UpdateMixin, BaseCommand):
                     commit=False,
                 )
             db.session.commit()
-        except (DAOUpdateFailedError, DAODeleteFailedError) as ex:
+        except DAOUpdateFailedError as ex:
             logger.exception(ex.exception)
             raise DashboardUpdateFailedError() from ex
         return dashboard
@@ -77,7 +69,6 @@ class UpdateDashboardCommand(UpdateMixin, BaseCommand):
         owner_ids: Optional[list[int]] = self._properties.get("owners")
         roles_ids: Optional[list[int]] = self._properties.get("roles")
         slug: Optional[str] = self._properties.get("slug")
-        tag_ids: Optional[list[int]] = self._properties.get("tags")
 
         # Validate/populate model exists
         self._model = DashboardDAO.find_by_id(self._model_id)
@@ -102,12 +93,8 @@ class UpdateDashboardCommand(UpdateMixin, BaseCommand):
             self._properties["owners"] = owners
         except ValidationError as ex:
             exceptions.append(ex)
-
-        # validate tags
-        try:
-            validate_tags(ObjectType.dashboard, self._model.tags, tag_ids)
-        except ValidationError as ex:
-            exceptions.append(ex)
+        if exceptions:
+            raise DashboardInvalidError(exceptions=exceptions)
 
         # Validate/Populate role
         if roles_ids is None:

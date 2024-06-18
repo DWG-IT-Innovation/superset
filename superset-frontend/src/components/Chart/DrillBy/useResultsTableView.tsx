@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import React from 'react';
 import { css, styled, isDefined, QueryData, t } from '@superset-ui/core';
 import { SingleQueryResultPane } from 'src/explore/components/DataTablesPane/components/SingleQueryResultPane';
 import Tabs from 'src/components/Tabs';
