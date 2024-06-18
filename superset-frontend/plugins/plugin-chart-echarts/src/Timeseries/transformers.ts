@@ -167,6 +167,7 @@ export function transformSeries(
     lineStyle?: LineStyleOption;
     queryIndex?: number;
     timeCompare?: string[];
+    decalStyle?: {};
   },
 ): SeriesOption | undefined {
   const { name } = series;
@@ -194,6 +195,7 @@ export function transformSeries(
     isHorizontal = false,
     queryIndex = 0,
     timeCompare = [],
+    decalStyle,
   } = opts;
   const contexts = seriesContexts[name || ''] || [];
   const hasForecast =
@@ -242,10 +244,15 @@ export function transformSeries(
     plotType = seriesType === 'bar' ? 'bar' : 'line';
   }
   // forcing the colorScale to return a different color for same metrics across different queries
-  const itemStyle = {
+  let itemStyle = {
     color: colorScale(colorScaleKey, sliceId),
     opacity,
-  };
+  } as ItemStyleOption;
+
+  if (Object.keys(decalStyle as object).length !== 0) {
+    itemStyle.decal = decalStyle;
+  }
+
   let emphasis = {};
   let showSymbol = false;
   if (!isConfidenceBand) {

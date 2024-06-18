@@ -279,6 +279,7 @@ export default function transformProps(
   rawSeries.forEach(entry => {
     const derivedSeries = isDerivedSeries(entry, chartProps.rawFormData);
     const lineStyle: LineStyleOption = {};
+    var decalStyle = {};
     if (derivedSeries) {
       const offset = getTimeOffset(
         entry,
@@ -289,11 +290,19 @@ export default function transformProps(
       }
       lineStyle.type = 'dashed';
       lineStyle.width = offsetLineWidths[offset];
+      decalStyle = {
+        color: 'rgba(255, 255, 255, 0.6)',
+        dashArrayX: [1, 0],
+        dashArrayY: [7, 4],
+        symbolSize: 1,
+        rotation: Math.PI / 6
+      };
     }
 
     const entryName = String(entry.name || '');
     const seriesName = inverted[entryName] || entryName;
     const colorScaleKey = getOriginalSeries(seriesName, array);
+    // const colorScaleKey = seriesName;
 
     const transformedSeries = transformSeries(
       entry,
@@ -327,6 +336,7 @@ export default function transformProps(
         isHorizontal,
         lineStyle,
         timeCompare: array,
+        decalStyle,
       },
     );
     if (transformedSeries) {
@@ -526,6 +536,12 @@ export default function transformProps(
     grid: {
       ...defaultGrid,
       ...padding,
+    },
+    aria: {
+      enabled: true,
+      decal: {
+        show: false
+      }
     },
     xAxis,
     yAxis,
